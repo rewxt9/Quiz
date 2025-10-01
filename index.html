@@ -1,0 +1,440 @@
+<!DOCTYPE html>
+<html lang="pl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Quiz o Kreatywności</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+        
+        body {
+            background: linear-gradient(135deg, #6a11cb 0%, #2575fc 100%);
+            color: white;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+        }
+        
+        .container {
+            max-width: 800px;
+            width: 100%;
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(10px);
+            border-radius: 20px;
+            padding: 30px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+        }
+        
+        h1 {
+            text-align: center;
+            margin-bottom: 30px;
+            font-size: 2.5rem;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.2);
+        }
+        
+        .progress-container {
+            width: 100%;
+            background: rgba(255, 255, 255, 0.2);
+            border-radius: 10px;
+            margin-bottom: 20px;
+            overflow: hidden;
+        }
+        
+        .progress-bar {
+            height: 10px;
+            background: #4cd964;
+            width: 0%;
+            transition: width 0.3s ease;
+        }
+        
+        .question-counter {
+            text-align: right;
+            margin-bottom: 20px;
+            font-weight: bold;
+        }
+        
+        .question {
+            font-size: 1.5rem;
+            margin-bottom: 25px;
+            text-align: center;
+            line-height: 1.4;
+        }
+        
+        .options {
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+            margin-bottom: 30px;
+        }
+        
+        .option {
+            background: rgba(255, 255, 255, 0.15);
+            padding: 15px 20px;
+            border-radius: 12px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            border: 2px solid transparent;
+        }
+        
+        .option:hover {
+            background: rgba(255, 255, 255, 0.25);
+            transform: translateY(-2px);
+        }
+        
+        .option.selected {
+            background: rgba(255, 255, 255, 0.3);
+            border-color: #4cd964;
+        }
+        
+        .controls {
+            display: flex;
+            justify-content: space-between;
+        }
+        
+        button {
+            padding: 12px 25px;
+            border: none;
+            border-radius: 10px;
+            background: #4cd964;
+            color: white;
+            font-weight: bold;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-size: 1rem;
+        }
+        
+        button:hover {
+            background: #3cb854;
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+        }
+        
+        button:disabled {
+            background: rgba(255, 255, 255, 0.2);
+            cursor: not-allowed;
+            transform: none;
+            box-shadow: none;
+        }
+        
+        .results {
+            text-align: center;
+            display: none;
+        }
+        
+        .score {
+            font-size: 3rem;
+            margin: 20px 0;
+            font-weight: bold;
+        }
+        
+        .restart-btn {
+            margin-top: 20px;
+        }
+        
+        .timer {
+            text-align: center;
+            font-size: 1.2rem;
+            margin-bottom: 15px;
+            font-weight: bold;
+        }
+        
+        @media (max-width: 600px) {
+            .container {
+                padding: 20px;
+            }
+            
+            h1 {
+                font-size: 2rem;
+            }
+            
+            .question {
+                font-size: 1.3rem;
+            }
+            
+            button {
+                padding: 10px 20px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Quiz o Kreatywności</h1>
+        
+        <div class="timer">
+            Czas: <span id="time">0</span>s
+        </div>
+        
+        <div class="progress-container">
+            <div class="progress-bar" id="progress-bar"></div>
+        </div>
+        
+        <div class="question-counter">
+            Pytanie <span id="current-question">1</span> z <span id="total-questions">8</span>
+        </div>
+        
+        <div class="question" id="question">
+            <!-- Pytanie będzie wstawiane tutaj -->
+        </div>
+        
+        <div class="options" id="options">
+            <!-- Opcje odpowiedzi będą wstawiane tutaj -->
+        </div>
+        
+        <div class="controls">
+            <button id="prev-btn" disabled>Poprzednie</button>
+            <button id="next-btn">Następne</button>
+        </div>
+        
+        <div class="results" id="results">
+            <h2>Twój wynik</h2>
+            <div class="score" id="score">0/8</div>
+            <p id="result-message"></p>
+            <button class="restart-btn" id="restart-btn">Rozwiąż quiz ponownie</button>
+        </div>
+    </div>
+
+    <script>
+        // Twoje pytania
+        const quizData = [
+            {
+                question: "Kreatywne myślenie to:",
+                options: [
+                    "Talent tylko dla artystów",
+                    "Umiejętność, którą każdy może rozwijać",
+                    "Wrodzona cecha, której nie da się nauczyć"
+                ],
+                correct: 1
+            },
+            {
+                question: "Która z tych technik pomaga w rozwijaniu kreatywności?",
+                options: [
+                    "Burza mózgów",
+                    "Zapamiętywanie na pamięć",
+                    "Mechaniczne powtarzanie ćwiczeń"
+                ],
+                correct: 0
+            },
+            {
+                question: "Kto powiedział: „Kreatywność to inteligencja, która dobrze się bawi”?",
+                options: [
+                    "Steve Jobs",
+                    "Albert Einstein",
+                    "Nikola Tesla"
+                ],
+                correct: 1
+            },
+            {
+                question: "Przykład kreatywności w życiu codziennym to:",
+                options: [
+                    "Wymyślenie nowego sposobu odrabiania pracy domowej",
+                    "Robienie wszystkiego dokładnie tak, jak zawsze",
+                    "Kopiowanie pomysłów od innych"
+                ],
+                correct: 0
+            },
+            {
+                question: "Dlaczego kreatywność jest ważna w XXI wieku?",
+                options: [
+                    "Bo dzięki niej możemy szybciej korzystać z internetu",
+                    "Bo rozwija innowacje i pomaga wyróżnić się",
+                    "Bo zastępuje wiedzę i naukę"
+                ],
+                correct: 1
+            },
+            {
+                question: "Mit o kreatywności mówi, że:",
+                options: [
+                    "Kreatywność to tylko sztuka",
+                    "Każdy może być kreatywny",
+                    "Kreatywność pomaga w nauce i pracy"
+                ],
+                correct: 0
+            },
+            {
+                question: "Która z poniższych osób jest znana z kreatywnego myślenia?",
+                options: [
+                    "Nikola Tesla",
+                    "Henryk Sienkiewicz",
+                    "Mikołaj Kopernik"
+                ],
+                correct: 0
+            },
+            {
+                question: "Jak można ćwiczyć kreatywne myślenie?",
+                options: [
+                    "Zadawać pytania typu „co by było, gdyby…?”",
+                    "Powtarzać wszystko według schematu",
+                    "Unikać nowych pomysłów i ryzyka"
+                ],
+                correct: 0
+            }
+        ];
+
+        // Zmienne stanu quizu
+        let currentQuestion = 0;
+        let score = 0;
+        let selectedOption = null;
+        let timeElapsed = 0;
+        let timerInterval;
+
+        // Elementy DOM
+        const questionElement = document.getElementById('question');
+        const optionsElement = document.getElementById('options');
+        const currentQuestionElement = document.getElementById('current-question');
+        const totalQuestionsElement = document.getElementById('total-questions');
+        const progressBar = document.getElementById('progress-bar');
+        const prevButton = document.getElementById('prev-btn');
+        const nextButton = document.getElementById('next-btn');
+        const resultsElement = document.getElementById('results');
+        const scoreElement = document.getElementById('score');
+        const resultMessageElement = document.getElementById('result-message');
+        const restartButton = document.getElementById('restart-btn');
+        const timeElement = document.getElementById('time');
+
+        // Inicjalizacja quizu
+        function initQuiz() {
+            totalQuestionsElement.textContent = quizData.length;
+            loadQuestion();
+            startTimer();
+        }
+
+        // Ładowanie pytania
+        function loadQuestion() {
+            const currentQuizData = quizData[currentQuestion];
+            questionElement.textContent = currentQuizData.question;
+            
+            // Aktualizacja licznika pytań
+            currentQuestionElement.textContent = currentQuestion + 1;
+            
+            // Aktualizacja paska postępu
+            progressBar.style.width = `${((currentQuestion + 1) / quizData.length) * 100}%`;
+            
+            // Wyczyść opcje
+            optionsElement.innerHTML = '';
+            
+            // Dodaj nowe opcje
+            currentQuizData.options.forEach((option, index) => {
+                const optionElement = document.createElement('div');
+                optionElement.classList.add('option');
+                optionElement.textContent = option;
+                optionElement.addEventListener('click', () => selectOption(index));
+                optionsElement.appendChild(optionElement);
+            });
+            
+            // Aktualizuj przyciski nawigacji
+            prevButton.disabled = currentQuestion === 0;
+            nextButton.textContent = currentQuestion === quizData.length - 1 ? 'Zakończ' : 'Następne';
+            
+            // Resetuj wybór
+            selectedOption = null;
+        }
+
+        // Wybór opcji
+        function selectOption(index) {
+            // Usuń zaznaczenie z wszystkich opcji
+            const options = document.querySelectorAll('.option');
+            options.forEach(option => option.classList.remove('selected'));
+            
+            // Zaznacz wybraną opcję
+            options[index].classList.add('selected');
+            selectedOption = index;
+        }
+
+        // Przejdź do następnego pytania
+        function nextQuestion() {
+            if (selectedOption === null && currentQuestion < quizData.length - 1) {
+                alert('Proszę wybrać odpowiedź przed przejściem dalej!');
+                return;
+            }
+            
+            // Sprawdź odpowiedź
+            if (selectedOption === quizData[currentQuestion].correct) {
+                score++;
+            }
+            
+            if (currentQuestion < quizData.length - 1) {
+                currentQuestion++;
+                loadQuestion();
+            } else {
+                showResults();
+            }
+        }
+
+        // Przejdź do poprzedniego pytania
+        function prevQuestion() {
+            if (currentQuestion > 0) {
+                currentQuestion--;
+                loadQuestion();
+            }
+        }
+
+        // Pokaż wyniki
+        function showResults() {
+            clearInterval(timerInterval);
+            document.querySelector('.container > div:not(.results)').style.display = 'none';
+            resultsElement.style.display = 'block';
+            
+            scoreElement.textContent = `${score}/${quizData.length}`;
+            
+            // Określ wiadomość na podstawie wyniku
+            let message = '';
+            const percentage = (score / quizData.length) * 100;
+            
+            if (percentage >= 80) {
+                message = 'Świetny wynik! Jesteś bardzo kreatywną osobą!';
+            } else if (percentage >= 60) {
+                message = 'Dobry wynik! Twoja kreatywność jest na dobrym poziomie.';
+            } else if (percentage >= 40) {
+                message = 'Nieźle, ale kreatywność warto dalej rozwijać.';
+            } else {
+                message = 'Warto popracować nad rozwojem kreatywności!';
+            }
+            
+            resultMessageElement.textContent = message;
+        }
+
+        // Restart quizu
+        function restartQuiz() {
+            currentQuestion = 0;
+            score = 0;
+            timeElapsed = 0;
+            selectedOption = null;
+            
+            document.querySelector('.container > div:not(.results)').style.display = 'block';
+            resultsElement.style.display = 'none';
+            
+            loadQuestion();
+            startTimer();
+        }
+
+        // Timer
+        function startTimer() {
+            clearInterval(timerInterval);
+            timeElapsed = 0;
+            timeElement.textContent = timeElapsed;
+            
+            timerInterval = setInterval(() => {
+                timeElapsed++;
+                timeElement.textContent = timeElapsed;
+            }, 1000);
+        }
+
+        // Event listeners
+        nextButton.addEventListener('click', nextQuestion);
+        prevButton.addEventListener('click', prevQuestion);
+        restartButton.addEventListener('click', restartQuiz);
+
+        // Rozpocznij quiz
+        initQuiz();
+    </script>
+</body>
+</html>
