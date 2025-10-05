@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Quiz o Kreatywności</title>
+    <title>Quiz z języka niemieckiego</title>
     <style>
         * {
             margin: 0;
@@ -13,7 +13,7 @@
         }
         
         body {
-            background: linear-gradient(135deg, #6a11cb 0%, #2575fc 100%);
+            background: linear-gradient(135deg, #1e3c72 0%, #2a5298 100%);
             color: white;
             min-height: 100vh;
             display: flex;
@@ -167,7 +167,7 @@
 </head>
 <body>
     <div class="container">
-        <h1>Quiz o Kreatywności</h1>
+        <h1>Quiz z języka niemieckiego</h1>
         
         <div class="timer">
             Czas: <span id="time">0</span>s
@@ -178,7 +178,7 @@
         </div>
         
         <div class="question-counter">
-            Pytanie <span id="current-question">1</span> z <span id="total-questions">8</span>
+            Pytanie <span id="current-question">1</span> z <span id="total-questions">5</span>
         </div>
         
         <div class="question" id="question">
@@ -196,86 +196,39 @@
         
         <div class="results" id="results">
             <h2>Twój wynik</h2>
-            <div class="score" id="score">0/8</div>
+            <div class="score" id="score">0/5</div>
             <p id="result-message"></p>
             <button class="restart-btn" id="restart-btn">Rozwiąż quiz ponownie</button>
         </div>
     </div>
 
     <script>
-        // Twoje pytania
+        // Pytania w języku niemieckim
         const quizData = [
             {
-                question: "Kreatywne myślenie to:",
-                options: [
-                    "Talent tylko dla artystów",
-                    "Umiejętność, którą każdy może rozwijać",
-                    "Wrodzona cecha, której nie da się nauczyć"
-                ],
+                question: "Ich _____ meinen Koffer.",
+                options: ["gehe", "packe", "fahre"],
                 correct: 1
             },
             {
-                question: "Która z tych technik pomaga w rozwijaniu kreatywności?",
-                options: [
-                    "Burza mózgów",
-                    "Zapamiętywanie na pamięć",
-                    "Mechaniczne powtarzanie ćwiczeń"
-                ],
+                question: "Ich gehe zum _____.",
+                options: ["Bahnhof", "Haus", "Auto"],
                 correct: 0
             },
             {
-                question: "Kto powiedział: „Kreatywność to inteligencja, która dobrze się bawi”?",
-                options: [
-                    "Steve Jobs",
-                    "Albert Einstein",
-                    "Nikola Tesla"
-                ],
+                question: "Ich kaufe ein _____.",
+                options: ["Zug", "Ticket", "Tasche"],
                 correct: 1
             },
             {
-                question: "Przykład kreatywności w życiu codziennym to:",
-                options: [
-                    "Wymyślenie nowego sposobu odrabiania pracy domowej",
-                    "Robienie wszystkiego dokładnie tak, jak zawsze",
-                    "Kopiowanie pomysłów od innych"
-                ],
-                correct: 0
+                question: "Ich fahre mit dem _____.",
+                options: ["Flugzeug", "Bus", "Zug"],
+                correct: 2
             },
             {
-                question: "Dlaczego kreatywność jest ważna w XXI wieku?",
-                options: [
-                    "Bo dzięki niej możemy szybciej korzystać z internetu",
-                    "Bo rozwija innowacje i pomaga wyróżnić się",
-                    "Bo zastępuje wiedzę i naukę"
-                ],
+                question: "Ich komme in _____ an.",
+                options: ["Berlin", "Białystok", "Hamburg"],
                 correct: 1
-            },
-            {
-                question: "Mit o kreatywności mówi, że:",
-                options: [
-                    "Kreatywność to tylko sztuka",
-                    "Każdy może być kreatywny",
-                    "Kreatywność pomaga w nauce i pracy"
-                ],
-                correct: 0
-            },
-            {
-                question: "Która z poniższych osób jest znana z kreatywnego myślenia?",
-                options: [
-                    "Nikola Tesla",
-                    "Henryk Sienkiewicz",
-                    "Mikołaj Kopernik"
-                ],
-                correct: 0
-            },
-            {
-                question: "Jak można ćwiczyć kreatywne myślenie?",
-                options: [
-                    "Zadawać pytania typu „co by było, gdyby…?”",
-                    "Powtarzać wszystko według schematu",
-                    "Unikać nowych pomysłów i ryzyka"
-                ],
-                correct: 0
             }
         ];
 
@@ -390,13 +343,13 @@
             const percentage = (score / quizData.length) * 100;
             
             if (percentage >= 80) {
-                message = 'Świetny wynik! Jesteś bardzo kreatywną osobą!';
+                message = 'Sehr gut! Twój niemiecki jest doskonały!';
             } else if (percentage >= 60) {
-                message = 'Dobry wynik! Twoja kreatywność jest na dobrym poziomie.';
+                message = 'Gut gemacht! Dobry wynik z języka niemieckiego!';
             } else if (percentage >= 40) {
-                message = 'Nieźle, ale kreatywność warto dalej rozwijać.';
+                message = 'Nicht schlecht! Możesz jeszcze poćwiczyć niemiecki.';
             } else {
-                message = 'Warto popracować nad rozwojem kreatywności!';
+                message = 'Warto więcej poćwiczyć język niemiecki!';
             }
             
             resultMessageElement.textContent = message;
